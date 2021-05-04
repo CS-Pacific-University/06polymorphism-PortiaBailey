@@ -6,17 +6,24 @@ using namespace std;
 
 class Parcel {
 	public:
-		Parcel();
+		Parcel(int TID = 0, int weight = 0, int distance = 0, 
+						string to = "", string from = "");
 		int getWeight() const;
 		int getDistance() const;
-		bool getInsured() const;
-		bool getRush() const;
 		int getTid() const;
-		void setCost(double);
-		void read(istream& rcIn);
-		void print(ostream& rcOut) const;
-		double getCost() const;
-		int getDeliveryDay() const;
+
+		virtual double getInsured(bool) const = 0;
+		virtual double getRush(bool) const = 0;
+		virtual double getCost() const = 0;
+		virtual int getDeliveryDay() const = 0;
+
+		virtual void setInsured(bool) const = 0;
+		virtual void setRush(bool) const = 0;
+		virtual void setCost(double);
+
+		virtual void read(istream& rcIn);
+		virtual void print(ostream& rcOut) const;
+		
 	protected:
 		int mTrackingId;
 		string mTo;
@@ -24,8 +31,8 @@ class Parcel {
 		int mWeight;
 		int mDistance;
 		double mCost;
-		bool mbRush;
-		bool mbInsured;
+		bool mbRush = false;
+		bool mbInsured = false;
 };
 
 

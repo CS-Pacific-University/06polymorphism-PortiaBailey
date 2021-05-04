@@ -5,9 +5,10 @@ class Letter :
 {
   public:
     Letter();
-    int getDeliveryDay() const;
-    double setInsured(bool);
-    double setRush(bool);
+    int getDeliveryDay();
+    double getInsured(bool);
+    double getRush(bool);
+    double getCost();
     void read(istream&);
 
   private:
