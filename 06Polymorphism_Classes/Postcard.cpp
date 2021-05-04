@@ -22,7 +22,7 @@ using namespace std;
 //
 // Returned:			 None
 //***************************************************************************
-Postcard::Postcard() : Parcel () {
+Postcard::Postcard () : Parcel () {
 	mMessage = "";
 }
 
@@ -35,13 +35,17 @@ Postcard::Postcard() : Parcel () {
 //
 // Returned:    days - days to deliver
 //***************************************************************************
-int Postcard::getDeliveryDay() {
+int Postcard::getDeliveryDay () {
 	const int MINIMUM_DAYS = 1;
 	int daysToDeliver = 0;
 	const int MAX_MILES = 10;
 	int days = 0;
+	int zeroDays = 0;
 	
 	days = mDistance / MAX_MILES;
+	if (days == zeroDays) {
+		days += MINIMUM_DAYS;
+	}
 
 	if (days > MINIMUM_DAYS && mbRush == true) {
 		days = days - 1;
@@ -58,9 +62,9 @@ int Postcard::getDeliveryDay() {
 //
 // Returned:    insurance - amount of insurance cost added
 //***************************************************************************
-double Postcard::getInsured(bool bInsured) {
+double Postcard::getInsured (bool bInsured) {
 	double insurance = 0.15;
-	if (bInsured != mbInsured) {
+	if ((bInsured == true && mbInsured == false) || mbInsured == true) {
 		mbInsured = true;
 	}
 	return insurance;
@@ -75,9 +79,9 @@ double Postcard::getInsured(bool bInsured) {
 //
 // Returned:    rush - amount of rush cost added
 //***************************************************************************
-double Postcard::getRush(bool bRush) {
+double Postcard::getRush (bool bRush) {
 	double rush = 0.25;
-	if (bRush != mbRush) {
+	if ((bRush == true && mbRush == false) || mbRush == true) {
 		mbRush = true;
 	}
 	return rush;
@@ -92,11 +96,8 @@ double Postcard::getRush(bool bRush) {
 //
 // Returned:    none
 //***************************************************************************
-void Postcard::read(istream& rcIn) {
-	const double COST_PER_OUNCE = 0.45;
-	rcIn >> mTrackingId >> mTo >> mFrom
-		>> mWeight >> mDistance >> mMessage;
-	mCost = 0.15;
+void Postcard::read (istream& rcIn) {
+	rcIn >> mTrackingId >> mTo >> mFrom >> mWeight >> mDistance >> mMessage;
 }
 
 //***************************************************************************
@@ -108,19 +109,91 @@ void Postcard::read(istream& rcIn) {
 //
 // Returned:    none
 //***************************************************************************
-void Postcard::print(ostream& rcOut) const {
-	rcOut << "TID: " << mTrackingId << "\tFrom: " << mFrom << "\tTo: "
-		<< mTo << "\t" << mMessage << endl;
+void Postcard::print (ostream& rcOut) {
+	Parcel::print (rcOut);
+
+	if (mbInsured == true) {
+		cout << "\tINSURED";
+	}
+
+	if (mbRush == true) {
+		cout << "\tRUSH";
+	}
+
+	cout << "\t" << mMessage << endl;
 }
 
-double Postcard::getCost() {
-	double cost = 0.15;
+//***************************************************************************
+// Function:    getCost
+//
+// Description: calculates cost of postcard
+//
+// Parameters:  none
+//
+// Returned:    cost - cost of parcel
+//***************************************************************************
+double Postcard::getCost () {
+	double cost = 0.00;
+	cost = getBaseCost ();
 	if (mbRush == true) {
-		cost += getRush(mbRush);
+		cost += getRush (mbRush);
 	}
 	if (mbInsured == true) {
-		cost += getInsured(mbInsured);
+		cost += getInsured (mbInsured);
 	}
 
 	return cost;
+}
+
+//***************************************************************************
+// Function:    setInsured
+//
+// Description: sets bInsured to false
+//
+// Parameters:  bInsured - bool that gets set to false if not insured
+//
+// Returned:    none
+//***************************************************************************
+void Postcard::setInsured (bool bInsured) {
+	bInsured = false;
+}
+
+//***************************************************************************
+// Function:    setRush
+//
+// Description: sets bRush to false
+//
+// Parameters:  bRush - bool that gets set to false if parcel is not rushed
+//
+// Returned:    none
+//***************************************************************************
+void Postcard::setRush (bool bRush) {
+	bRush = false;
+}
+
+//***************************************************************************
+// Function:    setCost
+//
+// Description: sets member mCost = cost of parcel
+//
+// Parameters:  cost - cost of parcel
+//
+// Returned:    none
+//***************************************************************************
+void Postcard::setCost (double cost) {
+	mCost = cost;
+}
+
+//***************************************************************************
+// Function:    getBaseCost
+//
+// Description: gets the base cost of a parcel without insurance or rush
+//
+// Parameters:  none
+//
+// Returned:    BASE_COST - initial cost of parcel
+//***************************************************************************
+double Postcard::getBaseCost () {
+	double BASE_COST = 0.15;
+	return BASE_COST;
 }

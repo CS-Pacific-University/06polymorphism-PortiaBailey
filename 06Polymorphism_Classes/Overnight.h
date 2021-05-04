@@ -11,15 +11,20 @@
 class Overnight :
     public Parcel
 {
-public:
-  Overnight();
-  int getDeliveryDay();
-  double getInsured(bool);
-  double getRush(bool);
-  void read(istream&);
-  void print(ostream&) const;
-  double getCost();
-private:
-  int mVolume;
+  public:
+    Overnight ();
+    int getDeliveryDay ();
+    double getInsured (bool);
+    double getRush (bool);
+    double getBaseCost ();
+    void read (istream&);
+    void print (ostream&);
+    double getCost ();
+    void setInsured (bool);
+    void setRush (bool);
+    void setCost (double);
+
+  private:
+    int mVolume;
 };
 

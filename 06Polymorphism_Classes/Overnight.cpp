@@ -21,7 +21,7 @@ using namespace std;
 //
 // Returned:			 None
 //***************************************************************************
-Overnight::Overnight() : Parcel () {
+Overnight::Overnight () : Parcel () {
 	mVolume = 0;
 }
 
@@ -34,17 +34,19 @@ Overnight::Overnight() : Parcel () {
 //
 // Returned:    days - days to deliver
 //***************************************************************************
-int Overnight::getDeliveryDay() {
-	const int MINIMUM_DAYS = 1;
-	int daysToDeliver = 0;
-	const int MAX_MILES = 1000;
+int Overnight::getDeliveryDay () {
+	const int MILES_PER_DAY = 1000;
+	const int ONE_DAY = 1;
+	const int TWO_DAYS = 2;
 	int days = 0;
 
-	days = mDistance / MAX_MILES;
-
-	if (days > MINIMUM_DAYS && mbRush == true) {
-		days = days - 1;
+	if (mbRush == true && mDistance <= MILES_PER_DAY) {
+		days = ONE_DAY;
 	}
+	else {
+		days = TWO_DAYS;
+	}
+
 	return days;
 }
 
@@ -57,11 +59,14 @@ int Overnight::getDeliveryDay() {
 //
 // Returned:    insurance - amount of insurance cost added
 //***************************************************************************
-double Overnight::getInsured(bool bInsured) {
+double Overnight::getInsured (bool bInsured) {
 	const double INSURANCE_AMOUNT = 0.25;
 	double addedCost = 0.00;
-	if (bInsured != mbInsured) {
-		addedCost = mCost * INSURANCE_AMOUNT;
+	double cost = 0.00;
+	
+	cost = getBaseCost ();
+	if ((bInsured == true && mbInsured == false) || mbInsured == true) {
+		addedCost = cost * INSURANCE_AMOUNT;
 		mbInsured = true;
 	}
 	return addedCost;
@@ -76,13 +81,17 @@ double Overnight::getInsured(bool bInsured) {
 //
 // Returned:    rush - amount of rush cost added
 //***************************************************************************
-double Overnight::getRush(bool bRush) {
-	double rushAmount = 0.75;
+double Overnight::getRush (bool bRush) {
+	const double RUSH_AMOUNT = 0.75;
 	double addedCost = 0.00;
-	if (bRush != mbRush) {
-		addedCost = mCost * rushAmount;
+	double cost = 0.00;
+
+	cost = getBaseCost ();
+	if ((bRush == true && mbRush == false) || mbRush == true) {
+		addedCost = cost * RUSH_AMOUNT;
 		mbRush = true;
 	}
+
 	return addedCost;
 }
 
@@ -95,7 +104,7 @@ double Overnight::getRush(bool bRush) {
 //
 // Returned:    none
 //***************************************************************************
-void Overnight::read(istream& rcIn) {
+void Overnight::read (istream& rcIn) {
 	rcIn >> mTrackingId >> mTo >> mFrom
 		>> mWeight >> mDistance >> mVolume;
 }
@@ -109,28 +118,94 @@ void Overnight::read(istream& rcIn) {
 //
 // Returned:    none
 //***************************************************************************
-void Overnight::print(ostream& rcOut) const {
-	rcOut << "TID: " << mTrackingId << "\tFrom: " << mFrom << "\tTo: "
-		<< mTo << "\tOVERNIGHT!" << endl;
+void Overnight::print (ostream& rcOut) {
+	Parcel::print (rcOut);
+	if (mbRush == true) {
+		cout << "\tRUSH";
+	}
+
+	if (mbInsured == true) {
+		cout << "\tINSURED";
+	}
+
+	cout << "\t" << "OVERNIGHT!" << endl;
 }
 
-double Overnight::getCost() {
+//***************************************************************************
+// Function:    getCost
+//
+// Description: calculates cost of postcard
+//
+// Parameters:  none
+//
+// Returned:    cost - cost of parcel
+//***************************************************************************
+double Overnight::getCost () {
+	double cost = 0.00;
+	cost = getBaseCost() + getInsured(mbInsured) + getRush(mbRush);
+	return cost;
+}
+
+//***************************************************************************
+// Function:    setInsured
+//
+// Description: sets bInsured to false
+//
+// Parameters:  bInsured - bool that gets set to false if not insured
+//
+// Returned:    none
+//***************************************************************************
+void Overnight::setInsured (bool bInsured) {
+	bInsured = false;
+}
+
+//***************************************************************************
+// Function:    setRush
+//
+// Description: sets bRush to false
+//
+// Parameters:  bRush - bool that gets set to false if parcel is not rushed
+//
+// Returned:    none
+//***************************************************************************
+void Overnight::setRush (bool bRush) {
+	bRush = false;
+}
+
+//***************************************************************************
+// Function:    setCost
+//
+// Description: sets member mCost = cost of parcel
+//
+// Parameters:  cost - cost of parcel
+//
+// Returned:    none
+//***************************************************************************
+void Overnight::setCost (double cost) {
+	mCost = cost;
+}
+
+//***************************************************************************
+// Function:    getBaseCost
+//
+// Description: gets the base cost of a parcel without insurance or rush
+//
+// Parameters:  none
+//
+// Returned:    BASE_COST - initial cost of parcel
+//***************************************************************************
+double Overnight::getBaseCost () {
 	const double COST_OVER_MAX = 20.0;
 	const double COST_UNDER_MAX = 12.0;
-	const int MAX_VOLUME = 100;
-	const double COST_PER_OUNCE = 0.45;
-	int distancePerDay = 1000;
-	if (mVolume > MAX_VOLUME) {
-		mCost = COST_OVER_MAX;
+	const int VOLUME = 100;
+	double cost = 0.00;
+
+	if (mVolume > VOLUME) {
+		cost = COST_OVER_MAX;
 	}
 	else {
-		mCost = COST_UNDER_MAX;
+		cost = COST_UNDER_MAX;
 	}
-	if (mbRush == true) {
-		mCost += getRush(mbRush);
-	}
-	if (mbInsured == true) {
-		mCost += getInsured(mbInsured);
-	}
-	return mCost;
+
+	return cost;
 }

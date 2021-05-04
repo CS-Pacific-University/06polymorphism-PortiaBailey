@@ -17,7 +17,7 @@
 //
 // Returned:			 None
 //***************************************************************************
-Parcel::Parcel(int TID, int weight, int distance, string to, string from) {
+Parcel::Parcel (int TID, int weight, int distance, string to, string from) {
 	mTrackingId = TID;
 	mTo = to;
 	mFrom = from;
@@ -36,7 +36,7 @@ Parcel::Parcel(int TID, int weight, int distance, string to, string from) {
 //
 // Returned:    mWeight - weight of parcel
 //***************************************************************************
-int Parcel::getWeight() const {
+int Parcel::getWeight () const {
 	return mWeight;
 }
 
@@ -49,7 +49,7 @@ int Parcel::getWeight() const {
 //
 // Returned:    mDistance - distance parcel travels
 //***************************************************************************
-int Parcel::getDistance() const {
+int Parcel::getDistance () const {
 	return mDistance;
 }
 
@@ -62,35 +62,9 @@ int Parcel::getDistance() const {
 //
 // Returned:    mTrackingId - tracking ID of parcel
 //***************************************************************************
-int Parcel::getTid() const {
+int Parcel::getTid () const {
 	return mTrackingId;
 }
-
-//***************************************************************************
-// Function:    getInsured
-//
-// Description: bool that is true if parcel is insured and false if not
-//
-// Parameters:  None
-//
-// Returned:    mbInsured - true if parcel is insured, false if not insured
-//***************************************************************************
-//bool Parcel::getInsured() const {
-	//return mbInsured;
-//}
-
-//***************************************************************************
-// Function:    getDeliveryDay
-//
-// Description: Calculates amount of days to deliver
-//
-// Parameters:  None
-//
-// Returned:    days - days to deliver
-//***************************************************************************
-//bool Parcel::getRush() const {
-	//return mbRush;
-//}
 
 //***************************************************************************
 // Function:    setCost
@@ -101,36 +75,9 @@ int Parcel::getTid() const {
 //
 // Returned:    none
 //***************************************************************************
-void Parcel::setCost(double cost) {
+void Parcel::setCost (double cost) {
 	mCost = cost;
 }
-
-//***************************************************************************
-// Function:    getCost
-//
-// Description: gets cost of parcel
-//
-// Parameters:  None
-//
-// Returned:    mCost - cost of parcel
-//***************************************************************************
-//double Parcel::getCost() const {
-	//return mCost;
-//}
-
-//***************************************************************************
-// Function:    getDeliveryDay
-//
-// Description: amount of days to deliver
-//
-// Parameters:  None
-//
-// Returned:    deliveryDay - days to deliver
-//***************************************************************************
-//int Parcel::getDeliveryDay() const {
-	//int deliveryDay = 0;
-	//return deliveryDay;
-//}
 
 //***************************************************************************
 // Function:    read
@@ -141,9 +88,9 @@ void Parcel::setCost(double cost) {
 //
 // Returned:    none
 //***************************************************************************
-void Parcel::read(istream& rcIn) {
+void Parcel::read (istream& rcIn) {
 	rcIn >> mTrackingId >> mTo >> mFrom
-		>> mWeight >> mDistance;
+			 >> mWeight >> mDistance;
 }
 
 //***************************************************************************
@@ -155,7 +102,7 @@ void Parcel::read(istream& rcIn) {
 //
 // Returned:    none
 //***************************************************************************
-void Parcel::print(ostream& rcOut) const {
+void Parcel::print (ostream& rcOut) {
 	rcOut << "TID: " << mTrackingId << "\tFrom: " << mFrom << "\tTo: "
-		<< mTo << endl;
+		<< mTo;
 }
